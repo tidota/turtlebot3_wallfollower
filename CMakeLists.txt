@@ -26,10 +26,15 @@ find_package(geometry_msgs REQUIRED)
 # find_package(std_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 
-add_executable(controller src/controller.cpp)
-ament_target_dependencies(controller rclcpp geometry_msgs sensor_msgs)
+# add the include directory
+include_directories(
+  include
+)
+
+add_executable(wallfollower src/main.cpp src/wall_follower.cpp)
+ament_target_dependencies(wallfollower rclcpp geometry_msgs sensor_msgs)
 install(TARGETS
-  controller
+  wallfollower
   DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)
