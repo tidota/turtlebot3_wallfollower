@@ -13,14 +13,14 @@
 #include <geometry_msgs/msg/twist.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
 
-#include "turtlebot3_wallfollower/wall_follower.hpp"
+#include "turtlebot3_wallfollower/wallfollower.hpp"
 
 using namespace std::chrono_literals;
 
 using std::placeholders::_1;
 
 ////////////////////////////////////////////////////////////////////////////////
-Wallfollower::Wallfollower(): Node("wall_follower")
+Wallfollower::Wallfollower(): Node("wallfollower")
 {
   // Subscribe the topic for proximity data
   subscription_

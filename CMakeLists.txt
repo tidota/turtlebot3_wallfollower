@@ -31,7 +31,7 @@ include_directories(
   include
 )
 
-add_executable(wallfollower src/main.cpp src/wall_follower.cpp)
+add_executable(wallfollower src/main.cpp src/wallfollower.cpp)
 ament_target_dependencies(wallfollower rclcpp geometry_msgs sensor_msgs)
 install(TARGETS
   wallfollower

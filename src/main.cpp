@@ -2,7 +2,7 @@
 
 #include <memory>
 #include <rclcpp/rclcpp.hpp>
-#include "turtlebot3_wallfollower/wall_follower.hpp"
+#include "turtlebot3_wallfollower/wallfollower.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 int main(int argc, char * argv[])

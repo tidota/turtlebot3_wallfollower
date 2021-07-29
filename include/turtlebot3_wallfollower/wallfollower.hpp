@@ -1,4 +1,4 @@
-// wall_follower.hpp
+// wallfollower.hpp
 
 #include <mutex>
 
