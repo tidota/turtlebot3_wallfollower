@@ -15,9 +15,22 @@ export ROS_DOMAIN_ID=30
 ros2 run turtlebot3_wallfollower wallfollower
 ```
 
+To start,
+```
+export ROS_DOMAIN_ID=30
+ros2 service call /set_running std_srvs/srv/SetBool 'data: true'
+```
+
+To stop,
+```
+export ROS_DOMAIN_ID=30
+ros2 service call /set_running std_srvs/srv/SetBool 'data: false'
+```
+
 ## Simulation
 
 ```
+export ROS_DOMAIN_ID=30
 export TURTLEBOT3_MODEL=burger
 ros2 launch turtlebot3_wallfollower start_sim.launch.py
 ```

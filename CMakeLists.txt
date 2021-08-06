@@ -25,6 +25,7 @@ find_package(rclcpp REQUIRED)
 find_package(geometry_msgs REQUIRED)
 # find_package(std_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(std_srvs REQUIRED)
 
 # add the include directory
 include_directories(
@@ -32,7 +33,9 @@ include_directories(
 )
 
 add_executable(wallfollower src/main.cpp src/wallfollower.cpp)
-ament_target_dependencies(wallfollower rclcpp geometry_msgs sensor_msgs)
+ament_target_dependencies(
+  wallfollower
+  rclcpp geometry_msgs sensor_msgs std_srvs)
 install(TARGETS
   wallfollower
   DESTINATION lib/${PROJECT_NAME})

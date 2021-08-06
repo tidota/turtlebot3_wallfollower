@@ -28,6 +28,7 @@ def generate_launch_description():
             package='turtlebot3_wallfollower',
             executable='wallfollower',
             name='wallfollower',
+            parameters=[{'use_sim_time': use_sim_time}],
             output='screen'
         ),
     ])
