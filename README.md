@@ -1,7 +1,11 @@
 # Turtlebot3 Wallfollower
 
-This repository provides a simple wallfollowing program.
-A turtlebot3 follows the wall in the right by using the scan data.
+This repository is a simple wallfollowing program for a turtlebot3.
+By using the scan data, a turtlebot3 follows the wall on the right.
+
+It works on both the actual hardware and the simulated one.
+
+## Actual hardware
 
 Assuming the turtlebot3 has been setup, connect to the robot by SSH and launch
 the nodes.
@@ -29,17 +33,22 @@ ros2 service call /set_running std_srvs/srv/SetBool 'data: false'
 
 ## Simulation
 
+![](./img/sim1.jpg)
+
+![](./img/sim2.jpg)
+
+Start the simulation.
 ```
 export TURTLEBOT3_MODEL=burger
 ros2 launch turtlebot3_wallfollower start_sim.launch.py
 ```
 
-To start,
+To run the robot, call the `set_running` service.
 ```
 ros2 service call /set_running std_srvs/srv/SetBool 'data: true'
 ```
 
-To stop,
+To stop it,
 ```
 ros2 service call /set_running std_srvs/srv/SetBool 'data: false'
 ```
