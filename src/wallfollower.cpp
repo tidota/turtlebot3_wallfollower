@@ -66,8 +66,45 @@ void Wallfollower::timer_callback()
       msg = scan_msg_buff;
     }
 
-    // TODO: make a command message based on the sensor
-    message.angular.z = 1.0;
+    // make a command message based on the sensor
+    int M = 8;
+    std::vector<double> ranges(M);
+    int N = msg.ranges.size();
+    int interval = N/M;
+    for (int m = 0; m < M; ++m)
+    {
+      int start = (m*interval - interval/2 + N)%N;
+      int end = (m*interval + interval/2)%N;
+      double minimum = msg.ranges[start];
+      for (int i = start + 1; i < end; ++i)
+      {
+        if (minimum > msg.ranges[i])
+          minimum = msg.ranges[i];
+      }
+      ranges[m] = minimum;
+    }
+
+    if (ranges[0] < 0.5 || ranges[1] < 0.3 || ranges[7] < 0.3
+      || std::isinf(ranges[6]))
+    {
+      message.angular.z = 0.5;
+    }
+    else
+    {
+      message.linear.x = 0.3;
+      if (ranges[7] < ranges[6] * 0.9)
+      {
+        message.angular.z = 0.3; // turn left
+      }
+      else if (ranges[7] > ranges[6] * 1.2 || ranges[6] > 0.5)
+      {
+        message.angular.z = -0.3; // turn right
+        if (ranges[7] > ranges[6] * 1.5)
+        {
+          message.linear.x = 0.05;
+        }
+      }
+    }
   }
 
   publisher_->publish(message);
