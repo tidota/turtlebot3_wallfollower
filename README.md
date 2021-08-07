@@ -1,9 +1,9 @@
 # Turtlebot3 Wallfollower
 
-This repository is a simple wallfollowing program for a turtlebot3.
-By using the scan data, a turtlebot3 follows the wall on the right.
+This repository is my personal project to practice to run turtlebot3 with **ROS2 Foxy**.
+The program makes a turtlebot3 to follow the wall on the right by using the ranging data.
 
-It works on both the actual hardware and the simulated one.
+It should work on both the actual hardware and the simulated one.
 
 ## Actual hardware
 
