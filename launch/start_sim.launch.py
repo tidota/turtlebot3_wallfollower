@@ -16,6 +16,11 @@ def generate_launch_description():
 
     pkg_turtlebot3_gazebo = get_package_share_directory('turtlebot3_gazebo')
 
+    rviz_config_dir = os.path.join(
+            get_package_share_directory('turtlebot3_wallfollower'),
+            'rviz',
+            'default_view.rviz')
+
     return LaunchDescription([
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
@@ -28,6 +33,14 @@ def generate_launch_description():
             package='turtlebot3_wallfollower',
             executable='wallfollower',
             name='wallfollower',
+            parameters=[{'use_sim_time': use_sim_time}],
+            output='screen'
+        ),
+        Node(
+            package='rviz2',
+            executable='rviz2',
+            name='rviz2',
+            arguments=['-d', rviz_config_dir],
             parameters=[{'use_sim_time': use_sim_time}],
             output='screen'
         ),
