@@ -27,7 +27,8 @@ Wallfollower::Wallfollower(): Node("wallfollower"), running_(false)
   // Subscribe the topic for proximity data
   subscription_
     = this->create_subscription<sensor_msgs::msg::LaserScan>(
-      "scan", 10, std::bind(&Wallfollower::topic_callback, this, _1));
+      "scan", rclcpp::SensorDataQoS(),
+      std::bind(&Wallfollower::topic_callback, this, _1));
 
   // Make a publisher for controll
   publisher_
@@ -63,7 +64,6 @@ void Wallfollower::timer_callback()
     {
       std::lock_guard<std::mutex> lk(scan_mutex_);
       msg = scan_msg_buff_;
-      RCLCPP_ERROR(this->get_logger(), "? -> " + std::to_string(scan_msg_buff_.ranges.size()));
     }
 
     // make a command message based on the sensor
