@@ -26,8 +26,8 @@ class Wallfollower : public rclcpp::Node
   private:
     rclcpp::Service<std_srvs::srv::SetBool>::SharedPtr service_;
 
-  private: bool running;
+  private: bool running_;
 
-  private: std::mutex scan_mutex;
-  private: sensor_msgs::msg::LaserScan scan_msg_buff;
+  private: std::mutex scan_mutex_;
+  private: sensor_msgs::msg::LaserScan scan_msg_buff_;
 };

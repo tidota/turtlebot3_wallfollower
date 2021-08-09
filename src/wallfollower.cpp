@@ -22,7 +22,7 @@ using std::placeholders::_1;
 using std::placeholders::_2;
 
 ////////////////////////////////////////////////////////////////////////////////
-Wallfollower::Wallfollower(): Node("wallfollower"), running(false)
+Wallfollower::Wallfollower(): Node("wallfollower"), running_(false)
 {
   // Subscribe the topic for proximity data
   subscription_
@@ -48,22 +48,22 @@ Wallfollower::Wallfollower(): Node("wallfollower"), running(false)
 void Wallfollower::topic_callback(
   const sensor_msgs::msg::LaserScan::SharedPtr msg)
 {
-  std::lock_guard<std::mutex> lk(scan_mutex);
-  scan_msg_buff = *msg;
+  std::lock_guard<std::mutex> lk(scan_mutex_);
+  scan_msg_buff_ = *msg;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void Wallfollower::timer_callback()
 {
-  RCLCPP_INFO(this->get_logger(), "Publishing command");
   auto message = geometry_msgs::msg::Twist();
 
-  if (this->running)
+  if (this->running_)
   {
     sensor_msgs::msg::LaserScan msg;
     {
-      std::lock_guard<std::mutex> lk(scan_mutex);
-      msg = scan_msg_buff;
+      std::lock_guard<std::mutex> lk(scan_mutex_);
+      msg = scan_msg_buff_;
+      RCLCPP_ERROR(this->get_logger(), "? -> " + std::to_string(scan_msg_buff_.ranges.size()));
     }
 
     // make a command message based on the sensor
@@ -71,37 +71,45 @@ void Wallfollower::timer_callback()
     std::vector<double> ranges(M);
     int N = msg.ranges.size();
     int interval = N/M;
-    for (int m = 0; m < M; ++m)
-    {
-      int start = (m*interval - interval/2 + N)%N;
-      int end = (m*interval + interval/2)%N;
-      double minimum = msg.ranges[start];
-      for (int i = start + 1; i < end; ++i)
-      {
-        if (minimum > msg.ranges[i])
-          minimum = msg.ranges[i];
-      }
-      ranges[m] = minimum;
-    }
 
-    if (ranges[0] < 0.5 || ranges[1] < 0.3 || ranges[7] < 0.3
-      || std::isinf(ranges[6]))
+    if (N == 0)
     {
-      message.angular.z = 0.5;
+      RCLCPP_ERROR(this->get_logger(), "Empty scan data!");
     }
     else
     {
-      message.linear.x = 0.3;
-      if (ranges[7] < ranges[6] * 0.9)
+      for (int m = 0; m < M; ++m)
       {
-        message.angular.z = 0.3; // turn left
-      }
-      else if (ranges[7] > ranges[6] * 1.2 || ranges[6] > 0.5)
-      {
-        message.angular.z = -0.3; // turn right
-        if (ranges[7] > ranges[6] * 1.5)
+        int start = (m*interval - interval/2 + N)%N;
+        int end = (m*interval + interval/2)%N;
+        double minimum = msg.ranges[start];
+        for (int i = start + 1; i < end; ++i)
         {
-          message.linear.x = 0.05;
+          if (minimum > msg.ranges[i])
+            minimum = msg.ranges[i];
+        }
+        ranges[m] = minimum;
+      }
+
+      if (ranges[0] < 0.5 || ranges[1] < 0.3 || ranges[7] < 0.3
+        || std::isinf(ranges[6]))
+      {
+        message.angular.z = 0.5;
+      }
+      else
+      {
+        message.linear.x = 0.3;
+        if (ranges[7] < ranges[6] * 0.9)
+        {
+          message.angular.z = 0.3; // turn left
+        }
+        else if (ranges[7] > ranges[6] * 1.2 || ranges[6] > 0.5)
+        {
+          message.angular.z = -0.3; // turn right
+          if (ranges[7] > ranges[6] * 1.5)
+          {
+            message.linear.x = 0.05;
+          }
         }
       }
     }
@@ -115,14 +123,16 @@ void Wallfollower::set_running(
   const std::shared_ptr<std_srvs::srv::SetBool::Request> request,
         std::shared_ptr<std_srvs::srv::SetBool::Response> response)
 {
-  this->running = request->data;
+  this->running_ = request->data;
   response->success = true;
-  if (this->running)
+  if (this->running_)
   {
+    RCLCPP_INFO(this->get_logger(), "Got a command to run.");
     response->message = "Run.";
   }
   else
   {
+    RCLCPP_INFO(this->get_logger(), "Got a command to stop.");
     response->message = "Stop.";
   }
 }
