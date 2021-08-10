@@ -91,8 +91,10 @@ void Wallfollower::timer_callback()
         ranges[m] = minimum;
       }
 
-      if (ranges[0] < 0.5 || ranges[1] < 0.3 || ranges[7] < 0.3
-        || std::isinf(ranges[6]))
+      if (ranges[0] < 0.5 || ranges[1] < 0.5 || ranges[7] < 0.3
+        || std::isinf(ranges[6])
+        || ranges[6] > ranges[0]
+        || ranges[6] > ranges[2])
       {
         message.angular.z = 0.5;
       }
