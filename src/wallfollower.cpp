@@ -68,7 +68,8 @@ void Wallfollower::timer_callback()
 
     // make a command message based on the sensor
     int M = 8;
-    std::vector<double> ranges(M);
+    std::vector<double> ranges_min(M);
+    // std::vector<double> ranges_ave(M);
     int N = msg.ranges.size();
     int interval = N/M;
 
@@ -83,35 +84,60 @@ void Wallfollower::timer_callback()
         int start = (m*interval - interval/2 + N)%N;
         int end = (m*interval + interval/2)%N;
         double minimum = msg.ranges[start];
+        // double total = 0;
+        // int count = 0;
         for (int i = start + 1; i < end; ++i)
         {
-          if (minimum > msg.ranges[i])
+          if (minimum == 0 || (msg.ranges[i] > 0 && minimum > msg.ranges[i]))
             minimum = msg.ranges[i];
+          // if (!std::isinf(msg.ranges[i]) && msg.ranges[i] > 0)
+          // {
+          //   total += msg.ranges[i];
+          //   ++count;
+          // }
         }
-        ranges[m] = minimum;
+        ranges_min[m] = minimum;
+        // if (count > 0)
+        //   ranges_ave[m] = total / count;
+        // else
+        //   ranges_ave[m] = minimum;
       }
 
-      if (ranges[0] < 0.5 || ranges[1] < 0.5 || ranges[7] < 0.3
-        || std::isinf(ranges[6])
-        || ranges[6] > ranges[0]
-        || ranges[6] > ranges[2])
+      if (ranges_min[0] < 0.3 ||
+          ranges_min[1] < 0.3 ||
+          ranges_min[0] < ranges_min[6] ||
+          ranges_min[1] < ranges_min[6] ||
+          ranges_min[2] < ranges_min[6])
       {
+        // turn left
         message.angular.z = 0.5;
+      }
+      else if (ranges_min[7] > ranges_min[6] * 1.5)
+      {
+        // go around the right corner
+        message.linear.x = 0.1;
+        message.angular.z = -0.3;
       }
       else
       {
-        message.linear.x = 0.3;
-        if (ranges[7] < ranges[6] * 0.9)
+        if (ranges_min[7] < ranges_min[5] * 0.9 ||
+            ranges_min[6] < 0.2)
         {
-          message.angular.z = 0.3; // turn left
+          // steer left
+          message.linear.x = 0.1;
+          message.angular.z = 0.3;
         }
-        else if (ranges[7] > ranges[6] * 1.2 || ranges[6] > 0.5)
+        else if (ranges_min[5] < ranges_min[7] * 0.9 ||
+                 ranges_min[6] > 0.3)
         {
-          message.angular.z = -0.3; // turn right
-          if (ranges[7] > ranges[6] * 1.5)
-          {
-            message.linear.x = 0.05;
-          }
+          // steer right
+          message.linear.x = 0.1;
+          message.angular.z = -0.3;
+        }
+        else
+        {
+          // go straight
+          message.linear.x = 0.2;
         }
       }
     }
