@@ -2,12 +2,13 @@
 
 #include <mutex>
 
-#include <rclcpp/rclcpp.hpp>
+#include <ros/ros.h>
+
 #include <geometry_msgs/msg/twist.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
 #include <std_srvs/srv/set_bool.hpp>
 
-class Wallfollower : public rclcpp::Node
+class Wallfollower
 {
   public: Wallfollower();
   private: void topic_callback(
@@ -18,13 +19,13 @@ class Wallfollower : public rclcpp::Node
           std::shared_ptr<std_srvs::srv::SetBool::Response> response);
 
   private:
-    rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_;
+    ros::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_;
   private:
-    rclcpp::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr subscription_;
+    ros::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr subscription_;
   private:
-    rclcpp::TimerBase::SharedPtr timer_;
+    ros::TimerBase::SharedPtr timer_;
   private:
-    rclcpp::Service<std_srvs::srv::SetBool>::SharedPtr service_;
+    ros::Service<std_srvs::srv::SetBool>::SharedPtr service_;
 
   private: bool running_;
 
