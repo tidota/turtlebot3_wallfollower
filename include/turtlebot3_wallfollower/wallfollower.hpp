@@ -4,31 +4,32 @@
 
 #include <ros/ros.h>
 
-#include <geometry_msgs/msg/twist.hpp>
-#include <sensor_msgs/msg/laser_scan.hpp>
-#include <std_srvs/srv/set_bool.hpp>
+#include <geometry_msgs/Twist.h>
+#include <sensor_msgs/LaserScan.h>
+#include <std_srvs/SetBool.h>
 
 class Wallfollower
 {
   public: Wallfollower();
   private: void topic_callback(
-                  const sensor_msgs::msg::LaserScan::SharedPtr msg);
-  private: void timer_callback();
-  private: void set_running(
-    const std::shared_ptr<std_srvs::srv::SetBool::Request> request,
-          std::shared_ptr<std_srvs::srv::SetBool::Response> response);
+                  const sensor_msgs::LaserScan::ConstPtr& msg);
+  private: void timer_callback(const ros::TimerEvent& event);
+  private: bool set_running(
+    std_srvs::SetBool::Request& request, std_srvs::SetBool::Response& response);
+
+  private: ros::NodeHandle nh;
 
   private:
-    ros::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_;
+    ros::Publisher publisher_;
   private:
-    ros::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr subscription_;
+    ros::Subscriber subscription_;
   private:
-    ros::TimerBase::SharedPtr timer_;
+    ros::Timer timer_;
   private:
-    ros::Service<std_srvs::srv::SetBool>::SharedPtr service_;
+    ros::ServiceServer service_;
 
   private: bool running_;
 
   private: std::mutex scan_mutex_;
-  private: sensor_msgs::msg::LaserScan scan_msg_buff_;
+  private: sensor_msgs::LaserScan scan_msg_buff_;
 };
