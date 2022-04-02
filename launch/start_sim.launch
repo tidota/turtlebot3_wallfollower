@@ -1,47 +1,13 @@
-#!/usr/bin/env python3
+<?xml version="1.0"?>
+<launch>
+  <arg name="output" default="screen"/>
 
-import os
+  <include file="$(find turtlebot3_gazebo)/launch/turtlebot3_house.launch" />
 
-from ament_index_python.packages import get_package_share_directory
+  <node pkg="turtlebot3_wallfollower" type="wallfollower" name="wallfollower" output="$(arg output)" />
 
-from launch.substitutions import LaunchConfiguration
+  <node pkg="rviz" type="rviz" name="rviz" output="screen" args="-d $(find turtlebot3_wallfollower)/rviz/default_view.rviz" />
 
-from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription
-from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch_ros.actions import Node
-
-def generate_launch_description():
-    use_sim_time = LaunchConfiguration('use_sim_time', default='true')
-
-    pkg_turtlebot3_gazebo = get_package_share_directory('turtlebot3_gazebo')
-
-    rviz_config_dir = os.path.join(
-            get_package_share_directory('turtlebot3_wallfollower'),
-            'rviz',
-            'default_view.rviz')
-
-    return LaunchDescription([
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(
-                os.path.join(pkg_turtlebot3_gazebo, \
-                             'launch', 'turtlebot3_house.launch.py')
-            ),
-            launch_arguments={'use_sim_time': use_sim_time}.items(),
-        ),
-        Node(
-            package='turtlebot3_wallfollower',
-            executable='wallfollower',
-            name='wallfollower',
-            parameters=[{'use_sim_time': use_sim_time}],
-            output='screen'
-        ),
-        Node(
-            package='rviz2',
-            executable='rviz2',
-            name='rviz2',
-            arguments=['-d', rviz_config_dir],
-            parameters=[{'use_sim_time': use_sim_time}],
-            output='screen'
-        ),
-    ])
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="$(arg output)"/>
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" output="$(arg output)"/>
+</launch>
