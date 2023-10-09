@@ -1,14 +1,14 @@
 // main.cpp
 
 #include <memory>
-#include <ros/ros.h>
+#include <rclcpp/rclcpp.hpp>
 #include "turtlebot3_wallfollower/wallfollower.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 int main(int argc, char * argv[])
 {
-  ros::init(argc, argv, "wallfollower");
-  Wallfollower wallfollower;
-  ros::spin();
+  rclcpp::init(argc, argv);
+  rclcpp::spin(std::make_shared<Wallfollower>());
+  rclcpp::shutdown();
   return 0;
 }

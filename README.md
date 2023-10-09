@@ -1,38 +1,36 @@
 # Turtlebot3 Wallfollower
 
-This repository is my personal project to practice to run turtlebot3 with **ROS1 Noetic**.
+This repository is my personal project to practice to run turtlebot3 with **ROS 2**.
 The program makes a turtlebot3 to follow the wall on the right by using the ranging data.
 
+For ROS 1 version, checkout the branch `ros1-dev`, i.e., `git checkout ros1-dev` in the repository.
+
 It should work on both the actual hardware and the simulated one.
-
-To view the original ROS2 version, checkout the commit tagged `ros2-dev`
-```
-git chckout ros2-dev
-```
-
 
 ## Actual hardware
 
 Assuming the turtlebot3 has been setup, connect to the robot by SSH and launch
 the nodes.
 ```
-roslaunch turtlebot3_bringup robot.launch
+ros2 launch turtlebot3_bringup robot.launch.py
 ```
 
 Then, at the local PC,
 ```
 export ROS_DOMAIN_ID=30
-rosrun turtlebot3_wallfollower wallfollower
+ros2 run turtlebot3_wallfollower wallfollower
 ```
 
 To start,
 ```
-rosservice call /set_running std_srvs/srv/SetBool 'data: true'
+export ROS_DOMAIN_ID=30
+ros2 service call /set_running std_srvs/srv/SetBool 'data: true'
 ```
 
 To stop,
 ```
-rosservice call /set_running std_srvs/srv/SetBool 'data: false'
+export ROS_DOMAIN_ID=30
+ros2 service call /set_running std_srvs/srv/SetBool 'data: false'
 ```
 
 ## Simulation
@@ -43,16 +41,16 @@ rosservice call /set_running std_srvs/srv/SetBool 'data: false'
 
 Start the simulation.
 ```
-roslaunch turtlebot3_wallfollower start_sim.launch
+export TURTLEBOT3_MODEL=burger
+ros2 launch turtlebot3_wallfollower start_sim.launch.py
 ```
 
 To run the robot, call the `set_running` service.
 ```
-rosservice call /set_running std_srvs/srv/SetBool 'data: true'
+ros2 service call /set_running std_srvs/srv/SetBool 'data: true'
 ```
 
 To stop it,
 ```
-rosservice call /set_running std_srvs/srv/SetBool 'data: false'
+ros2 service call /set_running std_srvs/srv/SetBool 'data: false'
 ```
-
