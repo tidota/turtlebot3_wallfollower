@@ -67,40 +67,28 @@ void Wallfollower::timer_callback()
     }
 
     // make a command message based on the sensor
-    int M = 8;
-    std::vector<double> ranges_min(M);
-    // std::vector<double> ranges_ave(M);
-    int N = msg.ranges.size();
-    int interval = N/M;
+    constexpr int num_directions = 8;
+    std::vector<double> ranges_min(num_directions);
+    const int num_ranges = msg.ranges.size();
+    const int interval = num_ranges/num_directions;
 
-    if (N == 0)
+    if (num_ranges == 0)
     {
       RCLCPP_ERROR(this->get_logger(), "Empty scan data!");
     }
     else
     {
-      for (int m = 0; m < M; ++m)
+      for (int m = 0; m < num_directions; ++m)
       {
-        int start = (m*interval - interval/2 + N)%N;
-        int end = (m*interval + interval/2)%N;
+        int start = (m*interval - interval/2 + num_ranges)%num_ranges;
+        int end = (m*interval + interval/2)%num_ranges;
         double minimum = msg.ranges[start];
-        // double total = 0;
-        // int count = 0;
         for (int i = start + 1; i < end; ++i)
         {
           if (minimum == 0 || (msg.ranges[i] > 0 && minimum > msg.ranges[i]))
             minimum = msg.ranges[i];
-          // if (!std::isinf(msg.ranges[i]) && msg.ranges[i] > 0)
-          // {
-          //   total += msg.ranges[i];
-          //   ++count;
-          // }
         }
         ranges_min[m] = minimum;
-        // if (count > 0)
-        //   ranges_ave[m] = total / count;
-        // else
-        //   ranges_ave[m] = minimum;
       }
 
       if (ranges_min[0] < 0.3 ||
