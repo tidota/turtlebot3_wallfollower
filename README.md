@@ -7,6 +7,11 @@ For ROS 1 version, checkout the branch `ros1-dev`, i.e., `git checkout ros1-dev`
 
 It should work on both the actual hardware and the simulated one.
 
+**Update (3/15/2025):** Implemented a version of using Behavior Tree. The node of this version can run instead of the original version when you set the argument `use_bt:=true` for the launch file like this:
+```
+ros2 launch turtlebot3_wallfollower start_sim.launch.py use_bt:=true
+```
+
 ## Actual hardware
 
 Assuming the turtlebot3 has been setup, connect to the robot by SSH and launch

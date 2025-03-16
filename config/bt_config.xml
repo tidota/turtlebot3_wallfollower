@@ -1,0 +1,16 @@
+<root main_tree_to_execute = "MainTree" >
+  <BehaviorTree ID="MainTree">
+    <Sequence name="root_sequence">
+      <ProcData   name="proc_data"/>
+      <Fallback>
+        <IsIdling name="is_idling"/>
+        <TurnLeft name="turn_left"/>
+        <GoAroundRightCorner name="go_around_right_corner"/>
+        <SteerLeft name="steer_left"/>
+        <SteerRight name="steer_right"/>
+        <GoStraight name="go_straight"/>
+      </Fallback>
+      <PublishCom   name="publish_com"/>
+    </Sequence>
+  </BehaviorTree>
+</root>

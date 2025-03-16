@@ -26,6 +26,7 @@ find_package(geometry_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
+find_package(behaviortree_cpp_v3 REQUIRED)
 
 # add the include directory
 include_directories(
@@ -38,6 +39,14 @@ ament_target_dependencies(
   rclcpp geometry_msgs sensor_msgs std_srvs)
 install(TARGETS
   wallfollower
+  DESTINATION lib/${PROJECT_NAME})
+
+add_executable(wallfollower_bt src/bt/main.cpp src/bt/wallfollower.cpp)
+ament_target_dependencies(
+  wallfollower_bt
+  rclcpp geometry_msgs sensor_msgs std_srvs behaviortree_cpp_v3)
+install(TARGETS
+  wallfollower_bt
   DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)
@@ -54,6 +63,7 @@ endif()
 install(DIRECTORY
   launch
   rviz
+  config
   DESTINATION share/${PROJECT_NAME}/
 )
 
