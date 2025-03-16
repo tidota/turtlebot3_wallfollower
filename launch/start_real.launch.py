@@ -31,7 +31,7 @@ def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument(
             'use_bt',
-            default_value='false'
+            default_value='true'
         ),
         Node(  # Behavior Tree version of Wallfollower
             condition=IfCondition(
