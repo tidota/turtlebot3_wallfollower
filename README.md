@@ -7,7 +7,19 @@
 ![](./img/corner.png)
 
 This repository is my personal project to practice to run turtlebot3 with **ROS 2**.
-The program makes a turtlebot3 to follow the wall and turn around the corner on the right side based on a simple reactive control with ranging sensory data. The reactive control is implemented with a Behavior Tree. (though there is room of improvement in the design...)
+A turtlebot3 robot follows the wall on the right side based on a simple reactive control with ranging sensory data. The reactive control is implemented with a **Behavior Tree**. (though there is room of improvement in the design...)
+
+## How to Build
+
+Make sure ROS 2 Humble and Gazebo are installed. Then, run the following commands:
+```
+mkdir -p ~/wall_wc/src
+cd ~/wall_wc/src
+git clone https://github.com/tidota/turtlebot3_wallfollower.git
+cd ..
+colcon build
+. install/setup.bash
+```
 
 ## Simulation
 
