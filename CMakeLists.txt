@@ -23,7 +23,7 @@ find_package(ament_cmake REQUIRED)
 
 find_package(rclcpp REQUIRED)
 find_package(geometry_msgs REQUIRED)
-# find_package(std_msgs REQUIRED)
+find_package(std_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
 
@@ -32,7 +32,7 @@ include_directories(
   include
 )
 
-add_executable(wallfollower src/main.cpp src/wallfollower.cpp)
+add_executable(wallfollower src/orig/main.cpp src/orig/wallfollower.cpp)
 ament_target_dependencies(
   wallfollower
   rclcpp geometry_msgs sensor_msgs std_srvs)
