@@ -52,10 +52,7 @@ class Wallfollower : public rclcpp::Node {
   BT::NodeStatus TurnLeft() {
     RCLCPP_DEBUG(this->get_logger(), "Running TurnLeft");
     if (ranges_min_[0] < 0.3 ||
-        ranges_min_[1] < 0.3 ||
-        ranges_min_[0] < ranges_min_[6] ||
-        ranges_min_[1] < ranges_min_[6] ||
-        ranges_min_[2] < ranges_min_[6]) {
+        3.0 < ranges_min_[6]) {
       // turn left
       com_.linear.x = 0.0;
       com_.angular.z = 0.5;
@@ -67,8 +64,8 @@ class Wallfollower : public rclcpp::Node {
     RCLCPP_DEBUG(this->get_logger(), "Running GoAroundRightCorner");
     if (ranges_min_[7] > ranges_min_[6] * 1.5) {
       // go around the right corner
-      com_.linear.x = 0.1;
-      com_.angular.z = -0.3;
+      com_.linear.x = 0.07;
+      com_.angular.z = -0.5;
       return BT::NodeStatus::SUCCESS;
     }
     return BT::NodeStatus::FAILURE;
@@ -98,7 +95,7 @@ class Wallfollower : public rclcpp::Node {
   BT::NodeStatus GoStraight() {
     RCLCPP_DEBUG(this->get_logger(), "Running GoStraight");
     // go straight
-    com_.linear.x = 0.2;
+    com_.linear.x = 0.1;
     com_.angular.z = 0.0;
     return BT::NodeStatus::SUCCESS;
   }

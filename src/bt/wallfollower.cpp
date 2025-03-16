@@ -81,9 +81,12 @@ BT::NodeStatus Wallfollower::ProcData() {
       RCLCPP_ERROR(this->get_logger(), "Empty scan data!");
     } else {
       ranges_min_.resize(kNumDirections);
+      const int index_0deg = static_cast<int>(num_ranges - msg.angle_min / msg.angle_increment)
+                           % num_ranges;
       const int interval = num_ranges / kNumDirections;
       for (int m = 0; m < kNumDirections; ++m) {
-        int start = (m*interval - interval/2 + num_ranges) % num_ranges;
+        int start = (m*interval - interval/2 + index_0deg + num_ranges)
+                  % num_ranges;
         int end = (start + interval) % num_ranges;
         double minimum = msg.ranges[start];
         for (int i = start + 1; i < end; ++i) {
